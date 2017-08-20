@@ -68,9 +68,9 @@ public class Auth {
 
     public static void openAuthActivity(@NonNull Activity activity){
         Intent intent=new Intent(activity,AuthActivity.class);
-        intent.putExtra(AuthActivity.KEY_URL,getAuthorizeUrl());
+        intent.putExtra(AuthActivity.KEY_URL,getAuthorizeUrl());//保存配置好的url
 
-        activity.startActivityForResult(intent,REQ_CODE);
+        activity.startActivityForResult(intent,REQ_CODE);//打开AuthActivity webView
     }
 
     public static String fetchAccessToken(String authCode)

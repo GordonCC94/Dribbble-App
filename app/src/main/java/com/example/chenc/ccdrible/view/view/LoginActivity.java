@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                 }//得到auth code,用于下一新线程内换取access token
             });
         }else{
-            Intent intent=new Intent(this, MainActivity.class);
+            Intent intent=new Intent(this, MainActivity.class);//得到用户信息并打开main Activity
             startActivity(intent);
             finish();
         }
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                         String token=Auth.fetchAccessToken(authCode);//得到access token
                         Dribbble.login(LoginActivity.this,token);
 
-                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                        Intent intent=new Intent(LoginActivity.this,MainActivity.class);//得到用户信息并打开main Activity
                         startActivity(intent);
                         finish();
                     }catch(IOException|JsonSyntaxException e){

@@ -39,15 +39,15 @@ public class AuthActivity extends AppCompatActivity {
 
         progressBar.setMax(100);
         webView.setWebViewClient(new WebViewClient(){
-            @Override
 
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view,String url){
                 if(url.startsWith(Auth.REDIRECT_URI)){
                     Uri uri= Uri.parse(url);
                     Intent resultIntent=new Intent();
-                    resultIntent.putExtra(KEY_CODE,uri.getQueryParameter(KEY_CODE));
+                    resultIntent.putExtra(KEY_CODE,uri.getQueryParameter(KEY_CODE));//得到code并保存
                     setResult(RESULT_OK,resultIntent);
-                    finish();
+                    finish();//结束当前view
                 }
                 return super.shouldOverrideUrlLoading(view,url);
             }
@@ -71,8 +71,8 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
-        String url=getIntent().getStringExtra(KEY_URL);
-        webView.loadUrl(url);
+        String url=getIntent().getStringExtra(KEY_URL);//得到url
+        webView.loadUrl(url);//载入网页，启动回调函数（上面）
     }
 
     @Override
