@@ -27,14 +27,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        Dribbble.init(this);
+        Dribbble.init(this);//load users
 
         if(!Dribbble.isLoggedIn()){
             loginBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Auth.openAuthActivity(LoginActivity.this);
-                }
+                }//得到auth code,用于下一新线程内换取access token
             });
         }else{
             Intent intent=new Intent(this, MainActivity.class);
@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     try{
-                        String token=Auth.fetchAccessToken(authCode);
+                        String token=Auth.fetchAccessToken(authCode);//得到access token
                         Dribbble.login(LoginActivity.this,token);
 
                         Intent intent=new Intent(LoginActivity.this,MainActivity.class);

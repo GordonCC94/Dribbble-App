@@ -42,17 +42,17 @@ public class Dribbble {
     private static Request.Builder authRequestBuilder(String url){
         return new Request.Builder()
                 .addHeader("Authorization","Bear"+accessToken)
-                .url(url);
+                .url(url);//生成request
     }
 
     private static Response makeRequest(Request request) throws IOException{
-        Response response=client.newCall(request).execute();
+        Response response=client.newCall(request).execute();//http请求
         Log.d(TAG,response.header("X-RateLimit-Remaining"));
-        return response;
+        return response;//request->makeRequest->response
     }
 
     private static Response makeGetRequest(String url) throws IOException{
-        Request request=authRequestBuilder(url).build();
+        Request request=authRequestBuilder(url).build();//生成request
         return makeRequest(request);
     }
 
@@ -91,7 +91,7 @@ public class Dribbble {
     }
 
     public static User getUser() throws IOException,JsonSyntaxException{
-        return parseResponse(makeGetRequest(USER_END_POINT),USER_TYPE);
+        return parseResponse(makeGetRequest(USER_END_POINT),USER_TYPE);//url->makeGetRequest->response
     }
 
     public static User getCurrentUser(){
