@@ -1,5 +1,6 @@
 package com.example.chenc.ccdrible.view.view;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -7,11 +8,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 import com.example.chenc.ccdrible.R;
 import com.example.chenc.ccdrible.view.bucket_list.BucketListFragment;
+import com.example.chenc.ccdrible.view.dribbble.Dribbble;
 import com.example.chenc.ccdrible.view.view.shot_list.ShotListFragment;
 
 import butterknife.BindView;
@@ -20,6 +25,7 @@ import butterknife.ButterKnife;
 @SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity {
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
     @BindView(R.id.drawer) NavigationView navigationView;
 
@@ -31,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -66,13 +74,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupDrawer() {
         drawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawerLayout,          /* DrawerLayout object */
-                R.string.open_drawer,         /* "open drawer" description */
-                R.string.close_drawer         /* "close drawer" description */
+                this,
+                drawerLayout,
+                R.string.open_drawer,
+                R.string.close_drawer
         );
 
         drawerLayout.setDrawerListener(drawerToggle);
+
+        View headerView = navigationView.getHeaderView(0);
+        ((TextView) headerView.findViewById(R.id.nav_header_user_name)).setText(
+                Dribbble.getCurrentUser().name);
+
+        headerView.findViewById(R.id.nav_header_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dribbble.logout(MainActivity.this);
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

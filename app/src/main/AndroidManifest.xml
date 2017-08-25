@@ -14,12 +14,14 @@
         <activity android:name=".view.view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".view.view.MainActivity" />
-        <activity android:name=".view.dribbble.Auth.AuthActivity"></activity>
+
+        <activity
+            android:name=".view.dribbble.Auth.AuthActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>
