@@ -12,4 +12,8 @@
     <dimen name="spacing_large">24dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="nav_header_login_btn_margin_left">-8dp</dimen>
+    <dimen name="shot_action_drawable_top_icon_padding">7dp</dimen>
+    <dimen name="shot_action_icon_size">32dp</dimen>
+    <dimen name="shot_author_picture_size">48dp</dimen>
+    <dimen name="shot_author_picture_radius">24dp</dimen>
 </resources>

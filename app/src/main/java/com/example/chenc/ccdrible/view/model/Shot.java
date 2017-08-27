@@ -10,8 +10,9 @@ import java.util.Map;
  */
 
 public class Shot {
-    public static final String  IMAGE_NORMAL="normal";
-    public static final String IMAGE_HIDPI="hidpi";
+
+    public static final String IMAGE_NORMAL = "normal";
+    public static final String IMAGE_HIDPI = "hidpi";
 
     public String id;
     public String title;
@@ -20,7 +21,7 @@ public class Shot {
 
     public int width;
     public int height;
-    public Map<String,String> images;
+    public Map<String, String> images;
     public boolean animated;
 
     public int views_count;
@@ -31,19 +32,19 @@ public class Shot {
 
     public User user;
 
-    public boolean liekd;
+    public boolean liked;
     public boolean bucketed;
 
     @Nullable
-    public String getImageUrl(){
-        if(images==null){
+    public String getImageUrl() {
+        if (images == null) {
             return null;
-        }else if(animated){
+        } else if (animated) {
             return images.get(IMAGE_NORMAL);
         }
 
         return images.containsKey(IMAGE_HIDPI)
-                ?images.get(IMAGE_HIDPI)
-                :images.get(IMAGE_NORMAL);
+                ? images.get(IMAGE_HIDPI)
+                : images.get(IMAGE_NORMAL);
     }
 }
