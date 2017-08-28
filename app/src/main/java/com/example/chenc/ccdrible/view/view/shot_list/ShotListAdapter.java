@@ -14,6 +14,7 @@ import com.example.chenc.ccdrible.view.utils.ModelUtils;
 import com.example.chenc.ccdrible.view.view.shot_detail.ShotActivity;
 import com.example.chenc.ccdrible.view.view.shot_detail.ShotFragment;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,44 +24,95 @@ import java.util.List;
 
 class ShotListAdapter extends RecyclerView.Adapter {
 
-    private List<Shot> data;
+    private static final int VIEW_TYPE_SHOT=1;
+    private static final int VIEW_TYPE_LOADING=2;
 
-    public ShotListAdapter(@NonNull List<Shot> data) {
+    private List<Shot> data;
+    private LoadMoreListener loadMoreListener;
+    private boolean showLoading;
+
+    public ShotListAdapter(@NonNull List<Shot> data,@NonNull LoadMoreListener loadMoreListener) {
         this.data = data;
+        this.loadMoreListener=loadMoreListener;
+        this.showLoading=true;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_shot, parent, false);
-        return new ShotViewHolder(view);
+        if(viewType==VIEW_TYPE_SHOT) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_shot, parent, false);
+            return new ShotViewHolder(view);
+        }else{
+            View view=LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_loading,parent,false);
+            return new RecyclerView.ViewHolder(view){};
+        }
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        final Shot shot = data.get(position);
+        final int viewType = getItemViewType(position);
+        if (viewType == VIEW_TYPE_LOADING) {
+            loadMoreListener.onLoadMore();
+        } else {
+            final Shot shot = data.get(position);
 
-        ShotViewHolder shotViewHolder = (ShotViewHolder) holder;
-        shotViewHolder.likeCount.setText(String.valueOf(shot.likes_count));
-        shotViewHolder.bucketCount.setText(String.valueOf(shot.buckets_count));
-        shotViewHolder.viewCount.setText(String.valueOf(shot.views_count));
-        shotViewHolder.image.setImageResource(R.drawable.shot_placeholder);
+            ShotViewHolder shotViewHolder = (ShotViewHolder) holder;
+            shotViewHolder.likeCount.setText(String.valueOf(shot.likes_count));
+            shotViewHolder.bucketCount.setText(String.valueOf(shot.buckets_count));
+            shotViewHolder.viewCount.setText(String.valueOf(shot.views_count));
+            //shotViewHolder.image.setImageResource(R.drawable.shot_placeholder);
 
-        shotViewHolder.cover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = holder.itemView.getContext();
-                Intent intent = new Intent(context, ShotActivity.class);
-                intent.putExtra(ShotFragment.KEY_SHOT,
-                        ModelUtils.toString(shot, new TypeToken<Shot>(){}));
-                intent.putExtra(ShotActivity.KEY_SHOT_TITLE, shot.title);
-                context.startActivity(intent);
-            }
-        });
+            Picasso.with(holder.itemView.getContext())
+                    .load(shot.getImageUrl())
+                    .placeholder(R.drawable.shot_placeholder)
+                    .into(shotViewHolder.image);
+
+            shotViewHolder.cover.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = holder.itemView.getContext();
+                    Intent intent = new Intent(context, ShotActivity.class);
+                    intent.putExtra(ShotFragment.KEY_SHOT,
+                            ModelUtils.toString(shot, new TypeToken<Shot>() {
+                            }));
+                    intent.putExtra(ShotActivity.KEY_SHOT_TITLE, shot.title);
+                    context.startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
+        return showLoading?data.size()+1:data.size();
+    }
+
+    @Override
+    public int getItemViewType(int position){
+        return position<data.size()
+                ?VIEW_TYPE_SHOT
+                :VIEW_TYPE_LOADING;
+    }
+
+    public void append(@NonNull List<Shot> moreShots) {
+        data.addAll(moreShots);
+        notifyDataSetChanged();
+    }
+
+    public interface LoadMoreListener{
+        void onLoadMore();
+    }
+
+    public int getDataCount(){
         return data.size();
     }
+
+    public void setShowLoading(boolean showLoading){
+        this.showLoading=showLoading;
+        notifyDataSetChanged();
+    }
+
+
 }
